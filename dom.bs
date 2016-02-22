@@ -84,6 +84,7 @@ urlPrefix: https://html.spec.whatwg.org/multipage/
             text: Unicode serialization of an origin; url: #unicode-serialisation-of-an-origin
         urlPrefix: infrastructure.html
             text: in parallel
+    type: method; for: Document; text: open(); url: dom-document-open
 urlPrefix: https://w3c.github.io/webcomponents/spec/shadow/
 	type: dfn; urlPrefix: #dfn-
 		text: shadow root
@@ -4095,22 +4096,47 @@ interface XMLDocument : Document {};
 {{Document}} <a>nodes</a> are simply
 known as <dfn export id=concept-document lt="document">documents</dfn>.
 
-Each <a>document</a> has an associated
-<dfn export for=Document id=concept-document-base-url>base URL</dfn> (a <a for=url>URL</a>),
-<dfn export for=Document id=concept-document-encoding>encoding</dfn> (an <a for="/">encoding</a>),
-<dfn export for=Document id=concept-document-content-type>content type</dfn> (a string),
-<dfn export for=Document id=concept-document-url>URL</dfn> (a <a for=url>URL</a>),
-<dfn export for=Document id=concept-document-type>type</dfn> ("<code>xml</code>" or "<code>html</code>"), and
-<dfn export for=Document id=concept-document-mode>mode</dfn> ("<code>no-quirks</code>", "<code>quirks</code>", or "<code>limited-quirks</code>").
-[[!ENCODING]]
-[[!URL]]
-
-Unless stated otherwise, a <a>document</a>'s <a for=Document>base URL</a> is
-"<code>about:blank</code>", <a for=Document>encoding</a> is the <a>utf-8</a>
-<a for="/">encoding</a>, <a for=Document>content type</a> is
-"<code>application/xml</code>", <a for=Document>URL</a> is "<code>about:blank</code>",
-<a for=Document>type</a> is "<code>xml</code>", and its
-<a for=Document>mode</a> is "<code>no-quirks</code>".
+Each <a>document</a> has some associated data:
+<table class=fields>
+ <thead>
+  <tr>
+   <th>Name
+   <th>Type
+   <th>Initial value
+   <th>Changes
+ <tbody>
+  <tr>
+   <th><dfn export for=Document id=concept-document-base-url>base URL</dfn>
+   <td>A <a for=url>URL</a> [[!URL]]
+   <td>"<code>about:blank</code>"
+   <td>Using the <{base}> element
+  <tr>
+   <th><dfn export for=Document id=concept-document-encoding>encoding</dfn>
+   <td>An <a for="/">encoding</a> [[!ENCODING]]
+   <td>The <a>utf-8</a> <a for="/">encoding</a>
+   <td>By {{Document/open()|document.open()}}
+  <tr>
+   <th><dfn export for=Document id=concept-document-content-type>content type</dfn>
+   <td>A string
+   <td>"<code>application/xml</code>"
+   <td>No
+  <tr>
+   <th><dfn export for=Document id=concept-document-url>URL</dfn>
+   <td>A <a for=url>URL</a> [[!URL]]
+   <td>"<code>about:blank</code>"
+   <td>By {{Document/open()|document.open()}}
+  <tr>
+   <th><dfn export for=Document id=concept-document-type>type</dfn>
+   <td>"<code>xml</code>" or "<code>html</code>"
+   <td>"<code>xml</code>"
+   <td>No
+  <tr>
+   <th><dfn export for=Document id=concept-document-mode>mode</dfn>
+   <td>"<code>no-quirks</code>", "<code>quirks</code>", or "<code>limited-quirks</code>"
+   <td>"<code>no-quirks</code>"
+   <td>By the <a>HTML parser</a> that created the <a>document</a>, based on the presence, absence,
+       or value of the DOCTYPE string. [[HTML]]
+</table>
 
 Unless stated otherwise, a <a>document</a>'s <a>origin</a> is a globally unique identifier
 and its <a>effective script origin</a> is an <a lt="origin alias">alias</a> of that
@@ -4130,10 +4156,6 @@ is "<code>quirks</code>", and
 <a for=Document>mode</a> is "<code>limited-quirks</code>".
 
 <div class="note no-backref">
- <p>The mode is only ever changed from the default if the <a>document</a> is created by
- the <a>HTML parser</a>, based on the presence, absence, or value of the DOCTYPE string.
- [[!HTML]]
-
  <p><a>No-quirks mode</a> was originally known as "standards mode"
  and <a>limited-quirks mode</a> was once known as "almost standards mode". They have been
  renamed because their details are now defined by standards. (And because Ian Hickson
